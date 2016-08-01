@@ -1,13 +1,11 @@
 package com.hand;
-import java.io.BufferedReader;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -15,34 +13,31 @@ public class App {
 
 	public static void main(String[] args) {
 		URL url;
-		String str;
 		try {
 			url = new URL("http://files.saas.hand-china.com/java/target.pdf");
 			URLConnection connection = url.openConnection();
 			InputStream is = connection.getInputStream();
-			InputStreamReader isr = new InputStreamReader(is, "UTF-8");
-			BufferedReader br = new BufferedReader(isr);
+			BufferedInputStream bis = new BufferedInputStream(is);
 			FileOutputStream fos = new FileOutputStream("target.pdf");
-			OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
-			PrintWriter pw = new PrintWriter(osw, true);
-			while ((str = br.readLine()) != null) {
-				pw.println(str);
+			BufferedOutputStream bos = new BufferedOutputStream(fos);
+			byte[] input = new byte[1000];
+			while (bis.read(input) != -1) {
+				bos.write(input);
+				Thread.sleep(5);
 			}
-			pw.close();
-			br.close();
-			osw.close();
-			isr.close();
+			bos.flush();
+			bos.close();
+			bis.close();
 			fos.close();
-			is.close();
-			System.out.println("done");
+			System.out.println("Íê³É");
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-
 	}
+
 }
